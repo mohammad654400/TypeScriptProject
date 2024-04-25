@@ -3,7 +3,7 @@ export interface baseType {
   title: string;
   type: string;
   width: number;
-  // order: number;
+  order: number;
 }
 
 export interface form extends Omit<baseType, "id" | "type"> {}

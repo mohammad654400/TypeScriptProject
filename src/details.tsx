@@ -10,7 +10,7 @@ const Details: React.FC<DetailsProps> = ({ findTypeitem, updateList }) => {
   const [inputs, setInputs] = useState<form>({
     title: "",
     width: 0,
-    //, order: 0
+    order: 0,
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,7 +47,7 @@ const Details: React.FC<DetailsProps> = ({ findTypeitem, updateList }) => {
           />
         </label>
         <br />
-        {/* <label>
+        <label>
           Enter order:
           <input
             type="number"
@@ -56,7 +56,7 @@ const Details: React.FC<DetailsProps> = ({ findTypeitem, updateList }) => {
             onChange={handleChange}
           />
         </label>
-        <br /> */}
+        <br />
         <input type="submit" />
       </form>
     </div>

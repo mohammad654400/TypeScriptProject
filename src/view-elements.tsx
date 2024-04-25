@@ -21,9 +21,6 @@ const ViewElements = ({
 
   const handelSelected = (id: string) => {
     setSelectedItem(id);
-    // اعمال تغییرات مرتبط با order
-    // const orderedItems = viewData.sort((a, b) => a.order - b.order);
-    // console.log('Ordered Items:', orderedItems);
   };
 
   return (
@@ -44,7 +41,7 @@ const ViewElements = ({
         >
           {item.type in renderOptions &&
             renderOptions[item.type](item.id, item.title, item.width)}
-          {/* <p>Order: {item.order}</p>  */}
+          <p>Order: {item.order}</p>
         </div>
       ))}
     </div>

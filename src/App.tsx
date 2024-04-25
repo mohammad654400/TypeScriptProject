@@ -16,6 +16,7 @@ function App() {
   const elementbaseData = {
     width: 6,
     title: "hi",
+    order: elementList.length + 1,
   };
 
   const addItemToList = (type: string) => {
@@ -23,33 +24,22 @@ function App() {
       id: generateRandomeId(type),
       type: type,
       ...elementbaseData,
-      // order: elementList.length + 1,
     };
     setElementList([...elementList, newItem]);
   };
-
   const findType = elementList.map((item) =>
     item.id === selected ? item.type : ""
   );
-  // const updateList = (newData: Partial<baseType>) => {
-  //   if (selected && newData) {
-  //     const updatedList = elementList.map((item) =>
-  //       item.id === selected ? { ...item, ...newData } : item
-  //     );
-  //     setElementList(updatedList);
-  //     console.log("newelementList", updatedList);
-  //   } else {
-  //     console.log("NullnewelementList", elementList);
-  //   }
-  // };
+
   const updateList = (newData: Partial<baseType>) => {
     if (selected && newData) {
       const updatedList = elementList.map((item) =>
         item.id === selected ? { ...item, ...newData } : item
       );
 
-      // مرتب‌سازی لیست بر اساس order
-      // updatedList.sort((a, b) => a.order - b.order);
+      updatedList.sort(function (a, b) {
+        return a.order - b.order;
+      });
 
       setElementList(updatedList);
     }
