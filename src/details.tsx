@@ -4,12 +4,20 @@ import { baseType, form } from "./types";
 interface DetailsProps {
   findTypeitem: string[];
   updateList: (newData: Partial<baseType>) => void;
+  //dataItemSelect:baseType
 }
 
-const Details: React.FC<DetailsProps> = ({ findTypeitem, updateList }) => {
+const Details: React.FC<DetailsProps> = ({
+  findTypeitem,
+  updateList,
+  // dataItemSelect
+}) => {
+  //console.log("newDataItemSelect", dataItemSelect);
+
   const [inputs, setInputs] = useState<form>({
     title: "",
     width: 0,
+    height: 0,
     order: 0,
   });
 
@@ -43,6 +51,16 @@ const Details: React.FC<DetailsProps> = ({ findTypeitem, updateList }) => {
             type="number"
             name="width"
             value={inputs.width || ""}
+            onChange={handleChange}
+          />
+        </label>
+        <br />
+        <label>
+          Enter your height:
+          <input
+            type="number"
+            name="height"
+            value={inputs.height || ""}
             onChange={handleChange}
           />
         </label>

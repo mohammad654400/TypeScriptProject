@@ -6,8 +6,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { Col, Container, Row } from "react-bootstrap";
 import { baseType } from "./types";
 function App() {
-  const [selected, setSelected] = useState<string>("");
+  const [selectedItemId, setSelectedItemId] = useState<string>("");
   const [elementList, setElementList] = useState<baseType[]>([]);
+  const [dataItemSelect, setDataItemSelect] = useState<baseType>();
 
   const generateRandomeId = (type: string) => {
     return `${type}-${Math.random() * 1000}`;
@@ -15,6 +16,7 @@ function App() {
 
   const elementbaseData = {
     width: 6,
+    height: 6,
     title: "hi",
     order: elementList.length + 1,
   };
@@ -28,13 +30,13 @@ function App() {
     setElementList([...elementList, newItem]);
   };
   const findType = elementList.map((item) =>
-    item.id === selected ? item.type : ""
+    item.id === selectedItemId ? item.type : ""
   );
 
   const updateList = (newData: Partial<baseType>) => {
-    if (selected && newData) {
+    if (selectedItemId && newData) {
       const updatedList = elementList.map((item) =>
-        item.id === selected ? { ...item, ...newData } : item
+        item.id === selectedItemId ? { ...item, ...newData } : item
       );
 
       updatedList.sort(function (a, b) {
@@ -54,7 +56,11 @@ function App() {
           <Elements getType={addItemToList} />
         </Col>
         <Col>
-          <ViewElements viewData={elementList} setSelectedItem={setSelected} />
+          <ViewElements
+            viewData={elementList}
+            setSelectedItem={setSelectedItemId}
+            setDataItemSelect={setDataItemSelect}
+          />
         </Col>
         <Col>
           <Details findTypeitem={findType} updateList={updateList} />
