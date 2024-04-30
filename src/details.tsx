@@ -1,27 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { baseType, form } from "./types";
+import { ButtonsDetails } from "./componentDetails/buttons-details";
+import { TextDetails } from "./componentDetails/text-details";
 
 interface DetailsProps {
-  findTypeitem: string[];
   updateList: (newData: Partial<baseType>) => void;
-  //dataItemSelect:baseType
+  dataItemSelect?: baseType;
 }
 
-const Details: React.FC<DetailsProps> = ({
-  findTypeitem,
-  updateList,
-  // dataItemSelect
-}) => {
-  //console.log("newDataItemSelect", dataItemSelect);
+const Details: React.FC<DetailsProps> = ({ updateList, dataItemSelect }) => {
+  console.log("dataItemSelect", dataItemSelect);
 
   const [inputs, setInputs] = useState<form>({
-    title: "",
-    width: 0,
-    height: 0,
-    order: 0,
+    title: dataItemSelect ? dataItemSelect.title : "",
+    width: dataItemSelect ? dataItemSelect.width : 0,
+    height: dataItemSelect ? dataItemSelect.height : 0,
+    order: dataItemSelect ? dataItemSelect.order : 0,
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
+  };
+
+  const handleChangeSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const { name, value } = event.target;
     setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
   };
@@ -31,52 +33,41 @@ const Details: React.FC<DetailsProps> = ({
     updateList(inputs);
   };
 
+  useEffect(() => {
+    setInputs({
+      title: dataItemSelect ? dataItemSelect.title : "",
+      width: dataItemSelect ? dataItemSelect.width : 0,
+      height: dataItemSelect ? dataItemSelect.height : 0,
+      order: dataItemSelect ? dataItemSelect.order : 0,
+      color: dataItemSelect ? dataItemSelect.color : "",
+      fontSize: dataItemSelect ? dataItemSelect?.fontSize : 0,
+      display: dataItemSelect ? dataItemSelect?.display : "",
+      justifyContent: dataItemSelect ? dataItemSelect?.justifyContent : "",
+      alignItem: dataItemSelect ? dataItemSelect?.alignItem : "",
+    });
+  }, [dataItemSelect]);
+
   return (
     <div style={{ backgroundColor: "yellow" }}>
-      <h1>type: {findTypeitem}</h1>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Enter your title:
-          <input
-            type="text"
-            name="title"
-            value={inputs.title || ""}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <label>
-          Enter your width:
-          <input
-            type="number"
-            name="width"
-            value={inputs.width || ""}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <label>
-          Enter your height:
-          <input
-            type="number"
-            name="height"
-            value={inputs.height || ""}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <label>
-          Enter order:
-          <input
-            type="number"
-            name="order"
-            value={inputs.order.toString() || ""}
-            onChange={handleChange}
-          />
-        </label>
-        <br />
-        <input type="submit" />
-      </form>
+      <h1>type: {dataItemSelect?.type}</h1>
+      {dataItemSelect != null ? (
+        <form onSubmit={handleSubmit}>
+          {dataItemSelect.type == "button" ? (
+            <ButtonsDetails handleChange={handleChange} inputsData={inputs} />
+          ) : dataItemSelect.type == "text" ? (
+            <TextDetails
+              handleChangeInput={handleChange}
+              handleChangeSelect={handleChangeSelect}
+              inputsData={inputs}
+            />
+          ) : (
+            <p>null</p>
+          )}
+
+          <br />
+          <input type="submit" />
+        </form>
+      ) : null}{" "}
     </div>
   );
 };

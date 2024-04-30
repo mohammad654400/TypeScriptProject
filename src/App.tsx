@@ -29,9 +29,9 @@ function App() {
     };
     setElementList([...elementList, newItem]);
   };
-  const findType = elementList.map((item) =>
-    item.id === selectedItemId ? item.type : ""
-  );
+  // const findType = elementList.map((item) =>
+  //   item.id === selectedItemId ? item.type : ""
+  // );
 
   const updateList = (newData: Partial<baseType>) => {
     if (selectedItemId && newData) {
@@ -47,8 +47,6 @@ function App() {
     }
   };
 
-  console.log("dataelementList", elementList);
-
   return (
     <Container>
       <Row>
@@ -63,7 +61,10 @@ function App() {
           />
         </Col>
         <Col>
-          <Details findTypeitem={findType} updateList={updateList} />
+          <Details
+            updateList={updateList}
+            dataItemSelect={dataItemSelect}
+          />
         </Col>
       </Row>
     </Container>

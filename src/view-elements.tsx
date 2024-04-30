@@ -48,8 +48,14 @@ const ViewElements = ({
           style={{
             gridColumnEnd: `span ${item.width}`,
             gridRowEnd: `span ${item.height}`,
+            fontSize: `${item?.fontSize}px`,
+            color: `${item?.color}`,
+            display: item?.display,
+            justifyContent: item?.justifyContent,
+            alignItems: item?.alignItem,
           }}
         >
+         
           {item.type in renderOptions &&
             renderOptions[item.type](
               item.id,
