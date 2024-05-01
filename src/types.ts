@@ -5,12 +5,12 @@ export interface baseType {
   width: number;
   height: number;
   order: number;
-  color?:string;
-  fontSize?:number;
-  display?:string;
-  justifyContent?:string;
-  alignItem?:string;
+  color?: string;
+  fontSize?: number;
+  display?: string;
+  justifyContent?: string;
+  alignItem?: string;
+  selectItem?: string[];
 }
-
 
 export interface form extends Omit<baseType, "id" | "type"> {}
