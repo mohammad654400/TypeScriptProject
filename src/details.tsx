@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { baseType, form } from "./types";
+import { ApiItem, baseType, form } from "./types";
 import { SelectedDetails } from "./componentDetails/selecteds-details";
 import { TextDetails } from "./componentDetails/text-details";
 import { ButtonsDetails } from "./componentDetails/buttons-details";
 
 interface DetailsProps {
-  updateList: (newData: Partial<baseType>) => void;
+  updateList: (newData: Partial<baseType>, itemId: string) => void;
   dataItemSelect?: baseType;
-  getApi: string[];
+  getApi: ApiItem[];
   loading: boolean;
-  setSelectedItems: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedItemId: string;
 }
 
 const Details: React.FC<DetailsProps> = ({
@@ -17,15 +17,17 @@ const Details: React.FC<DetailsProps> = ({
   dataItemSelect,
   getApi,
   loading,
-  setSelectedItems,
+  selectedItemId,
 }) => {
   const [inputs, setInputs] = useState<form>({
-    title: dataItemSelect ? dataItemSelect.title : "",
-    width: dataItemSelect ? dataItemSelect.width : 0,
-    height: dataItemSelect ? dataItemSelect.height : 0,
-    order: dataItemSelect ? dataItemSelect.order : 0,
-    selectItem: dataItemSelect ? dataItemSelect.selectItem : [],
+    title: dataItemSelect?.title || "",
+    width: dataItemSelect?.width || 0,
+    height: dataItemSelect?.height || 0,
+    order: dataItemSelect?.order || 0,
+    selectItem: dataItemSelect?.selectItem || [],
   });
+
+  console.log("inputsDetails", inputs.selectItem);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -37,50 +39,70 @@ const Details: React.FC<DetailsProps> = ({
     setInputs((prevInputs) => ({ ...prevInputs, [name]: value }));
   };
 
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = event.target;
+    setInputs((prevInputs) => {
+      if (checked) {
+        return {
+          ...prevInputs,
+          selectItem: [...(prevInputs.selectItem || []), value],
+        };
+      } else {
+        return {
+          ...prevInputs,
+          selectItem: (prevInputs.selectItem || []).filter(
+            (item) => item !== value
+          ),
+        };
+      }
+    });
+  };
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    updateList(inputs);
-    setSelectedItems(inputs.selectItem || []); // به‌روزرسانی مقادیر انتخاب شده
+    updateList(inputs, selectedItemId);
+    
+    
   };
 
   useEffect(() => {
-    setInputs({
-      title: dataItemSelect ? dataItemSelect.title : "",
-      width: dataItemSelect ? dataItemSelect.width : 0,
-      height: dataItemSelect ? dataItemSelect.height : 0,
-      order: dataItemSelect ? dataItemSelect.order : 0,
-      color: dataItemSelect ? dataItemSelect.color : "",
-      fontSize: dataItemSelect ? dataItemSelect?.fontSize : 0,
-      display: dataItemSelect ? dataItemSelect?.display : "",
-      justifyContent: dataItemSelect ? dataItemSelect?.justifyContent : "",
-      alignItem: dataItemSelect ? dataItemSelect?.alignItem : "",
-      selectItem: dataItemSelect ? dataItemSelect.selectItem : [],
-    });
-  }, [dataItemSelect]);
+    setInputs((prevInputs) => ({
+      ...prevInputs,
+      title: dataItemSelect?.title || "",
+      width: dataItemSelect?.width || 0,
+      height: dataItemSelect?.height || 0,
+      order: dataItemSelect?.order || 0,
+      color: dataItemSelect?.color || "",
+      fontSize: dataItemSelect?.fontSize || 0,
+      display: dataItemSelect?.display || "",
+      justifyContent: dataItemSelect?.justifyContent || "",
+      alignItem: dataItemSelect?.alignItem || "",
+      selectItem: Array.isArray(dataItemSelect?.selectItem)
+        ? dataItemSelect.selectItem
+        : [],
+    }));
+  }, [dataItemSelect, selectedItemId]);
 
   return (
     <div style={{ backgroundColor: "yellow" }}>
       <h1>type: {dataItemSelect?.type}</h1>
       {dataItemSelect != null ? (
         <form onSubmit={handleSubmit}>
-          {dataItemSelect.type == "button" ? (
+          {dataItemSelect.type === "button" ? (
             <ButtonsDetails handleChange={handleChange} inputsData={inputs} />
-          ) : dataItemSelect.type == "text" ? (
+          ) : dataItemSelect.type === "text" ? (
             <TextDetails
               handleChangeInput={handleChange}
               handleChangeSelect={handleChangeSelect}
               inputsData={inputs}
             />
-          ) : dataItemSelect.type == "select" ? (
+          ) : dataItemSelect.type === "select" ? (
             <SelectedDetails
               getApiName={getApi}
               loading={loading}
-              handleChangeInput={(selectedItems) => {
-                setInputs((prevInputs) => ({
-                  ...prevInputs,
-                  selectItem: selectedItems,
-                }));
-              }}
+              handleChange={handleChange}
+              handleCheckboxChange={handleCheckboxChange}
+              inputsData={inputs}
             />
           ) : (
             <p>null</p>
@@ -89,7 +111,7 @@ const Details: React.FC<DetailsProps> = ({
           <br />
           <input type="submit" />
         </form>
-      ) : null}{" "}
+      ) : null}
     </div>
   );
 };

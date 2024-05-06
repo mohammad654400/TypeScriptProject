@@ -4,7 +4,7 @@ import ViewElements from "./view-elements";
 import Details from "./details";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Col, Container, Row } from "react-bootstrap";
-import { baseType } from "./types";
+import { ApiItem, baseType } from "./types";
 import axios from "axios";
 
 function App() {
@@ -12,10 +12,9 @@ function App() {
   const [elementList, setElementList] = useState<baseType[]>([]);
   const [dataItemSelect, setDataItemSelect] = useState<baseType>();
   const [loading, setLoading] = useState<boolean>(true);
-  const [getApi, setGetApi] = useState([]);
+  const [getApi, setGetApi] = useState<ApiItem[]>([]);
   const baseURL =
     "http://universities.hipolabs.com/search?country=United+States";
-  const [selectedItems, setSelectedItems] = useState<string[]>([]); // مقادیر انتخاب شده
 
   useEffect(() => {
     axios
@@ -51,10 +50,10 @@ function App() {
     setElementList([...elementList, newItem]);
   };
 
-  const updateList = (newData: Partial<baseType>) => {
-    if (selectedItemId && newData) {
+  const updateList = (newData: Partial<baseType>, itemId: string) => {
+    if (itemId && newData) {
       const updatedList = elementList.map((item) =>
-        item.id === selectedItemId ? { ...item, ...newData } : item
+        item.id === itemId ? { ...item, ...newData } : item
       );
 
       updatedList.sort(function (a, b) {
@@ -64,6 +63,7 @@ function App() {
       setElementList(updatedList);
     }
   };
+  console.log("elementList", elementList);
 
   return (
     <Container>
@@ -76,7 +76,7 @@ function App() {
             viewData={elementList}
             setSelectedItem={setSelectedItemId}
             setDataItemSelect={setDataItemSelect}
-            selectedItems={selectedItems}
+            selectedItemId={selectedItemId}
           />
         </Col>
         <Col>
@@ -85,7 +85,7 @@ function App() {
             dataItemSelect={dataItemSelect}
             getApi={getApi}
             loading={loading}
-            setSelectedItems={setSelectedItems}
+            selectedItemId={selectedItemId}
           />
         </Col>
       </Row>

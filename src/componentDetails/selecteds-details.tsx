@@ -1,52 +1,78 @@
-import React, { useState } from "react";
+import React from "react";
+import { ApiItem, form } from "../types";
 
 interface SelectedDetailsProps {
-  getApiName: string[];
   loading: boolean;
-  handleChangeInput: (selectedItems: string[]) => void;
+  getApiName: ApiItem[];
+  inputsData?: form;
+  handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 export const SelectedDetails: React.FC<SelectedDetailsProps> = ({
   getApiName,
+  inputsData,
   loading,
-  handleChangeInput,
+  handleChange,
+  handleCheckboxChange,
 }) => {
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, checked } = event.target;
-    if (checked) {
-      setSelectedItems((prevSelectedItems) => [...prevSelectedItems, value]);
-    } else {
-      setSelectedItems((prevSelectedItems) =>
-        prevSelectedItems.filter((item) => item !== value)
-      );
-    }
-    handleChangeInput(selectedItems);
-  };
-
   return (
     <>
-      {loading === true ? (
-        <p>loading...</p>
-      ) : (
-        <ul>
-          {getApiName.map((x) => (
-            <li key={x.name}>
-              <label>
-                <input
-                  type="checkbox"
-                  value={x.name}
-                  name={x.alpha_two_code}
-                  checked={selectedItems.includes(x.name)}
-                  onChange={handleOnChange}
-                />
-                {x.name}
-              </label>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div>
+        {loading ? (
+          <p>loading...</p>
+        ) : (
+          <ul>
+            <p>Enter your selectItem:</p>
+            {getApiName.map((x) => {
+              return (
+                <div key={x.name}>
+                  <label>
+                    <input
+                      type="checkbox"
+                      name="selectItem"
+                      value={x.name}
+                      checked={inputsData?.selectItem?.includes(x.name)}
+                      onChange={handleCheckboxChange}
+                    />
+                    {x.name}
+                  </label>
+                </div>
+              );
+            })}
+          </ul>
+        )}
+      </div>
+      <br />
+      <label>
+        Enter your width:
+        <input
+          type="number"
+          name="width"
+          value={inputsData?.width}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label>
+        Enter your height:
+        <input
+          type="number"
+          name="height"
+          value={inputsData?.height}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label>
+        Enter order:
+        <input
+          type="number"
+          name="order"
+          value={inputsData?.order}
+          onChange={handleChange}
+        />
+      </label>
     </>
   );
 };

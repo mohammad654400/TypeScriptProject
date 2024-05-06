@@ -13,4 +13,13 @@ export interface baseType {
   selectItem?: string[];
 }
 
+export interface ApiItem {
+  alpha_two_code: string;
+  name: string;
+  country: string;
+  domains: string[];
+  web_pages: string[];
+  state_province: string | null;
+}
+
 export interface form extends Omit<baseType, "id" | "type"> {}

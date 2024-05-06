@@ -4,12 +4,12 @@ const ViewElements = ({
   viewData,
   setSelectedItem,
   setDataItemSelect,
-  selectedItems,
+  selectedItemId
 }: {
   viewData: baseType[];
   setSelectedItem: (id: string) => void;
   setDataItemSelect: (item: baseType) => void;
-  selectedItems: string[];
+  selectedItemId:string
 }) => {
   interface RenderOptions {
     [key: string]: (
@@ -17,9 +17,12 @@ const ViewElements = ({
       title: string,
       width: number,
       height: number,
-      fontSize?: number
+      fontSize?: number,
+      selectItem?: string[]
     ) => JSX.Element;
   }
+  console.log("viewData", viewData);
+
 
   const renderOptions: RenderOptions = {
     text: (id, title, width, height, fontSize) => (
@@ -29,20 +32,29 @@ const ViewElements = ({
       <button style={{ width: "100%", height: "100%" }}>{title}</button>
     ),
     select: (id, title, width, height) => (
+      
       <select>
-        {selectedItems.map((item) => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
+      {viewData.map((x) => {
+        if (x.id === selectedItemId) {
+          return (
+            <option key={x.id} value={x.selectItem}>
+              {x.selectItem}
+            </option>
+          );
+        }
+      })}
+    </select>
+    
     ),
   };
 
   const handleItemClick = (item: baseType) => {
     setSelectedItem(item.id);
     setDataItemSelect(item);
+ 
   };
+
+
 
   return (
     <div
@@ -73,7 +85,7 @@ const ViewElements = ({
               item.title,
               item.width,
               item.height,
-              item?.fontSize
+              item?.fontSize,
             )}
         </div>
       ))}
